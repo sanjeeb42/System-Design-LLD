@@ -7,12 +7,15 @@ import java.util.List;
 
 public class RemoteControl {
     private static final int MAX_COMMANDS = 4;
+
     List<ICommand>commands;
     List<Boolean>isTurnedon;
 
     public RemoteControl(){
+
         commands=new ArrayList<>(MAX_COMMANDS);
         isTurnedon=new ArrayList<>(MAX_COMMANDS);
+
         for(int i=0;i<4;i++){
             commands.add(null);
             isTurnedon.add(false);
@@ -21,6 +24,7 @@ public class RemoteControl {
 
     public void assignCommands(int index,ICommand command){
         if(index>=0 && index<MAX_COMMANDS){
+
             commands.set(index,command);
             isTurnedon.set(index,false);
         }
@@ -36,6 +40,7 @@ public class RemoteControl {
             // Optionally, log or handle the case where no command is assigned
             return;
         }
+
         if(isTurnedon.get(index)){
             commands.get(index).undo();
             isTurnedon.set(index,false);
