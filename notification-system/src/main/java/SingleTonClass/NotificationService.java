@@ -18,19 +18,7 @@ public class NotificationService {
 
     public static NotificationService getInstance(){
         if(instance==null){
-    private static volatile NotificationService instance;
-
-    private NotificationService() {
-        observable = new NotificationObservable();
-    }
-
-    public static NotificationService getInstance(){
-        if(instance == null){
-            synchronized (NotificationService.class) {
-                if(instance == null){
-                    instance = new NotificationService();
-                }
-            }
+            instance=new NotificationService();
         }
         return instance;
     }
@@ -43,6 +31,5 @@ public class NotificationService {
         notificationHistory.add(notification);
         observable.setNotification(notification);
     }
-
 
 }
