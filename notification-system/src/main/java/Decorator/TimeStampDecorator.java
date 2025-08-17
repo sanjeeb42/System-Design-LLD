@@ -9,6 +9,7 @@ public class TimeStampDecorator extends IDecorator {
 
     @Override
     public String getContent() {
-        return "[2025-04-13 14:22:00] "+ notification.getContent();
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return "[" + timestamp + "] " + notification.getContent();
     }
 }
