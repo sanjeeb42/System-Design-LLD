@@ -11,7 +11,11 @@ public class NotificationEngine implements IObserver {
     List<INotificationStrategy> strategyList=new ArrayList<>();
     public NotificationObservable notification;
 
-    public void addStrategy(INotificationStrategy strategy){
+    public NotificationEngine(NotificationObservable observable) {
+        this.notification=observable;
+    }
+
+    public void addNotificationStrategy(INotificationStrategy strategy){
         strategyList.add(strategy);
     }
 

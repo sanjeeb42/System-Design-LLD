@@ -29,6 +29,7 @@ public class NotificationObservable implements IObservable{
      
     public void setNotification(INotification notification){
         this.notification=notification;
+        notifyObserver();
     }
 
     public String getNotification(){

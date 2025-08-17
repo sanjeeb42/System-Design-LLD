@@ -12,7 +12,11 @@ public class NotificationService {
 
     private static NotificationService instance;
 
-    public NotificationService getInstance(){
+    private NotificationService() {
+        observable = new NotificationObservable();
+    }
+
+    public static NotificationService getInstance(){
         if(instance==null){
             instance=new NotificationService();
         }
