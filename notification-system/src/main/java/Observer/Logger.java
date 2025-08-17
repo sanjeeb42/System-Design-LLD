@@ -11,6 +11,6 @@ public class Logger implements IObserver{
     }
     @Override
     public void update() {
-        System.out.println("Logging New Notification"+ notificationObservable.getNotification());
+        System.out.println("Logging New Notification: " + notificationObservable.getNotification());
     }
 }
