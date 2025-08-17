@@ -16,7 +16,7 @@ public class RemoteControl {
         commands=new ArrayList<>(MAX_COMMANDS);
         isTurnedon=new ArrayList<>(MAX_COMMANDS);
 
-        for(int i=0;i<4;i++){
+        for(int i=0;i<MAX_COMMANDS;i++){
             commands.add(null);
             isTurnedon.add(false);
         }
