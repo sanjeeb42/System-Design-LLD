@@ -13,7 +13,14 @@ public class Restaurant {
     public Restaurant(String name, String location) {
         this.name = name;
         this.location = location;
-        this.restuarantId = ++nextRestaurantId;
+    private int restaurantId;
+    private static int nextRestaurantId = 0;
+    List<MenuItems>menu=new ArrayList<>();
+
+    public Restaurant(String name, String location) {
+        this.name = name;
+        this.location = location;
+        this.restaurantId = ++nextRestaurantId;
     }
 
     public String getName() {
