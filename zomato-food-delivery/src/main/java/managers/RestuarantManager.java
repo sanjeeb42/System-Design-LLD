@@ -15,7 +15,17 @@ public class RestuarantManager {
 
     public static RestuarantManager getInstance(){
         if(instance==null){
-            instance=new RestuarantManager();
+    private static volatile RestuarantManager instance = null;
+
+    private RestuarantManager(){}
+
+    public static RestuarantManager getInstance() {
+        if (instance == null) {
+            synchronized (RestuarantManager.class) {
+                if (instance == null) {
+                    instance = new RestuarantManager();
+                }
+            }
         }
         return instance;
     }
