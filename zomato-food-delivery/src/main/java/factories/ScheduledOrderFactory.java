@@ -36,5 +36,9 @@ public class ScheduledOrderFactory implements OrderFactory{
         return order;
     }
 }
+//Feedback on pull request - Jira 30197
 // Get the confirm cob complete event in processpayment method not controller
 // PaymentServiceImpl parameter to ovrride cobcheck
+// change in parameter zone2 ,cobdate, zone8, cobdate2
+// Let main thread not sleep,instead create a new scheduler and let it retry aftwr 10 minutes
+// If reports ready, then kill this process if event check is not found

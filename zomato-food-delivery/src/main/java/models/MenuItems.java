@@ -5,7 +5,7 @@ public class MenuItems {
     private String name;
     private int price;
 
-    public MenuItems(int price, String name, String code) {
+    public MenuItems( String code, String name,int price) {
         this.price = price;
         this.name = name;
         this.code = code;

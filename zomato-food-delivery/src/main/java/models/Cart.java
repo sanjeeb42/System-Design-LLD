@@ -28,7 +28,7 @@ public class Cart {
         this.items = items;
     }
 
-    void addToCart(MenuItems item){
+    public void addToCart(MenuItems item){
         if (restaurant == null) {
             System.err.println("Cart: Set a restaurant before adding items.");
             return;
@@ -48,7 +48,7 @@ public class Cart {
         return restaurant==null || items.isEmpty();
     }
 
-    void clearCart(){
+    public void clearCart(){
         items.clear();
         restaurant=null;
     }

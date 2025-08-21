@@ -7,13 +7,13 @@ public class Restaurant {
     private String name;
     private String location;
     private int restuarantId;
+    private static int nextRestaurantId = 0;
     List<MenuItems>menu=new ArrayList<>();
 
-    public Restaurant(String name, String location, int restuarantId, List<MenuItems> menu) {
+    public Restaurant(String name, String location) {
         this.name = name;
         this.location = location;
-        this.restuarantId = restuarantId;
-        this.menu = menu;
+        this.restuarantId = ++nextRestaurantId;
     }
 
     public String getName() {
@@ -32,19 +32,15 @@ public class Restaurant {
         this.location = location;
     }
 
-    public int getRestuarantId() {
-        return restuarantId;
-    }
-
-    public void setRestuarantId(int restuarantId) {
-        this.restuarantId = restuarantId;
-    }
-
     public List<MenuItems> getMenu() {
         return menu;
     }
 
     public void setMenu(List<MenuItems> menu) {
         this.menu = menu;
+    }
+
+    public void addMenuItem(MenuItems item){
+        menu.add(item);
     }
 }

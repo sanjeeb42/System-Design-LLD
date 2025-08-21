@@ -6,11 +6,11 @@ public class User {
     private String address;
     private Cart cart;
 
-    public User(int userId, String name, String address, Cart cart) {
+    public User(int userId, String name, String address) {
         this.userId = userId;
         this.name = name;
         this.address = address;
-        this.cart = cart;
+        this.cart =new Cart();
     }
 
     public int getUserId() {
