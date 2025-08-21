@@ -13,7 +13,17 @@ public class OrderManager {
 
     public static OrderManager getInstance() {
         if (instance == null) {
-            instance = new OrderManager();
+    private static volatile OrderManager instance = null;
+
+    private OrderManager() {}
+
+    public static OrderManager getInstance() {
+        if (instance == null) {
+            synchronized (OrderManager.class) {
+                if (instance == null) {
+                    instance = new OrderManager();
+                }
+            }
         }
         return instance;
     }
