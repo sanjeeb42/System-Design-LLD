@@ -10,7 +10,7 @@ public class NotificationService {
     private NotificationObservable observable;
     private List<INotification> notificationHistory=new ArrayList<>();
 
-    private static NotificationService instance;
+    private static volatile NotificationService instance;
 
     private NotificationService() {
         observable = new NotificationObservable();
@@ -18,7 +18,11 @@ public class NotificationService {
 
     public static NotificationService getInstance(){
         if(instance==null){
-            instance=new NotificationService();
+            synchronized (NotificationService.class) {
+                if(instance==null){
+                    instance=new NotificationService();
+                }
+            }
         }
         return instance;
     }
