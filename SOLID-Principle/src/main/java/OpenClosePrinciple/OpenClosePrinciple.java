@@ -56,7 +56,13 @@ interface saveInvoice{
     public void save();
 }
 
+// Tip bro - always add a refernce in Concreteclass and never in the interface
+
 class saveToDb implements saveInvoice{
+    ShoppingCart cart;
+    public saveToDb(ShoppingCart cart){
+        this.cart=cart;
+    }
     @Override
     public void save() {
         System.out.println("Saving the Invoice Details to database");
@@ -64,6 +70,10 @@ class saveToDb implements saveInvoice{
 }
 
 class saveToFile implements saveInvoice{
+    ShoppingCart cart;
+    public saveToFile(ShoppingCart cart){
+        this.cart=cart;
+    }
     @Override
     public void save() {
         System.out.println("Saving the Invoice Details to File");
@@ -83,7 +93,7 @@ public class OpenClosePrinciple {
         printInvoice printer = new printInvoice(cart);
         printer.print();
 
-        saveInvoice saver = new saveToFile();
+        saveInvoice saver = new saveToFile(cart);
         saver.save();
 
         System.out.println("Total: " + cart.calculateTotal());
