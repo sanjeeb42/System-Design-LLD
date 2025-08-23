@@ -1,4 +1,4 @@
-package SRP;
+package SingleResponsibilityPrinciple;
 
 import java.util.ArrayList;
 import java.util.List;
