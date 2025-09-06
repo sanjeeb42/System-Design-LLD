@@ -1,0 +1,182 @@
+Got it 👍 Let’s break down the **Decorator Design Pattern** in Java with a **real-life example**.
+
+---
+
+## 🚀 What is the Decorator Design Pattern?
+
+* It’s a **structural design pattern**.
+* Purpose: **Attach additional responsibilities to an object dynamically** without changing its class.
+* You wrap an object with another object (decorator) that **adds new behavior**.
+
+Think of it like **wrapping a gift box** – you don’t change the gift itself, but the wrapping adds extra features (fancy paper, ribbon, bow).
+
+---
+
+## ✅ Real-Life Example: Coffee Shop
+
+Imagine you order a coffee:
+
+* Base: **Plain Coffee**
+* Add-ons (decorators): **Milk, Sugar, Whipped Cream, Caramel** etc.
+
+Each add-on **decorates** the base coffee and increases cost + description.
+
+---
+
+## 🖥 Java Implementation
+
+### 1. Component (Base Interface)
+
+```java
+// The common interface for Coffee
+interface Coffee {
+    String getDescription();
+    double getCost();
+}
+```
+
+---
+
+### 2. Concrete Component
+
+```java
+// Base implementation
+class SimpleCoffee implements Coffee {
+    @Override
+    public String getDescription() {
+        return "Simple Coffee";
+    }
+
+    @Override
+    public double getCost() {
+        return 50.0;  // base price
+    }
+}
+```
+
+---
+
+### 3. Decorator (Abstract)
+
+```java
+// Decorator must also implement Coffee
+abstract class CoffeeDecorator implements Coffee {
+    protected Coffee decoratedCoffee; // the object being wrapped
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.decoratedCoffee = coffee;
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription();
+    }
+
+    @Override
+    public double getCost() {
+        return decoratedCoffee.getCost();
+    }
+}
+```
+
+---
+
+### 4. Concrete Decorators
+
+```java
+class MilkDecorator extends CoffeeDecorator {
+    public MilkDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", Milk";
+    }
+
+    @Override
+    public double getCost() {
+        return super.getCost() + 10.0;
+    }
+}
+
+class SugarDecorator extends CoffeeDecorator {
+    public SugarDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", Sugar";
+    }
+
+    @Override
+    public double getCost() {
+        return super.getCost() + 5.0;
+    }
+}
+
+class WhippedCreamDecorator extends CoffeeDecorator {
+    public WhippedCreamDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", Whipped Cream";
+    }
+
+    @Override
+    public double getCost() {
+        return super.getCost() + 20.0;
+    }
+}
+```
+
+---
+
+### 5. Client Code (Usage)
+
+```java
+public class CoffeeShop {
+    public static void main(String[] args) {
+        Coffee coffee = new SimpleCoffee();
+        System.out.println(coffee.getDescription() + " => " + coffee.getCost());
+
+        // Add Milk
+        coffee = new MilkDecorator(coffee);
+        System.out.println(coffee.getDescription() + " => " + coffee.getCost());
+
+        // Add Sugar
+        coffee = new SugarDecorator(coffee);
+        System.out.println(coffee.getDescription() + " => " + coffee.getCost());
+
+        // Add Whipped Cream
+        coffee = new WhippedCreamDecorator(coffee);
+        System.out.println(coffee.getDescription() + " => " + coffee.getCost());
+    }
+}
+```
+
+---
+
+## 📝 Output
+
+```
+Simple Coffee => 50.0
+Simple Coffee, Milk => 60.0
+Simple Coffee, Milk, Sugar => 65.0
+Simple Coffee, Milk, Sugar, Whipped Cream => 85.0
+```
+
+---
+
+## 🌟 Key Takeaways
+
+* **Open-Closed Principle** → You can extend behavior without modifying existing code.
+* **Flexible** → You can combine decorators in any order at runtime.
+* **Real-world analogy** → Coffee + add-ons, Pizza + toppings, Car + accessories.
+
+---
+
+👉 Do you want me to also show you how this differs from **inheritance** (like subclassing CoffeeWithMilk, CoffeeWithSugar, etc.), so it’s crystal clear **why we use Decorator instead**?
