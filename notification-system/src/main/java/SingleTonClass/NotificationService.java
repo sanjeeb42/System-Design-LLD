@@ -18,11 +18,7 @@ public class NotificationService {
 
     public static NotificationService getInstance(){
         if(instance==null){
-            synchronized (NotificationService.class) {
-                if(instance==null){
-                    instance=new NotificationService();
-                }
-            }
+            instance=new NotificationService();
         }
         return instance;
     }
