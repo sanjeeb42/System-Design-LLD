@@ -160,7 +160,6 @@ class OfflinePlayback implements PlaybackStrategy {
 
 // -------------------- Core Services Architecture --------------------
 interface UserActionService {
-    void handleUserAction(User user, Song song, String actionType);
     String getServiceName();
 }
 
@@ -168,13 +167,6 @@ class BookmarkService implements UserActionService {
     public void addBookmark(User user, Song song) {
         user.addToLikedSongs(song);
         System.out.println("[BookmarkService] " + song.getTitle() + " bookmarked for " + user.getUsername());
-    }
-
-    @Override
-    public void handleUserAction(User user, Song song, String actionType) {
-        if ("BOOKMARK".equals(actionType)) {
-            addBookmark(user, song);
-        }
     }
 
     @Override
@@ -192,13 +184,6 @@ class ShareService implements UserActionService {
     }
 
     @Override
-    public void handleUserAction(User user, Song song, String actionType) {
-        if ("SHARE".equals(actionType)) {
-            createShareLink(song, user);
-        }
-    }
-
-    @Override
     public String getServiceName() {
         return "ShareService";
     }
@@ -208,12 +193,6 @@ class AnalyticsService implements UserActionService {
     public void trackUserAction(User user, Song song, String action) {
         System.out.println("[Analytics] Tracking: " + user.getUsername() + " " + action + " " + song.getTitle());
         System.out.println("[Analytics] Data sent to recommendation engine");
-    }
-
-    @Override
-    public void handleUserAction(User user, Song song, String actionType) {
-        // Analytics tracks ALL actions
-        trackUserAction(user, song, actionType);
     }
 
     @Override
@@ -231,18 +210,15 @@ class UserActionServiceManager {
         System.out.println("[ServiceManager] Registered: " + service.getServiceName());
     }
 
-    public void processUserAction(User user, Song song, String actionType) {
-        System.out.println("[ServiceManager] Processing " + actionType + " for " + user.getUsername());
+    public UserActionService getServiceByName(String name) {
         for (UserActionService service : services) {
-            service.handleUserAction(user, song, actionType);
+            if (service.getServiceName().equals(name)) {
+                return service;
+            }
         }
+        return null;
     }
 
-    public List<String> getRegisteredServices() {
-        return services.stream()
-                .map(UserActionService::getServiceName)
-                .collect(ArrayList::new, (list, name) -> list.add(name), (list1, list2) -> list1.addAll(list2));
-    }
 }
 
 // -------------------- Facade --------------------
@@ -323,8 +299,10 @@ class MusicAppFacade {
         if (currentSong != null && currentUser != null) {
             currentUser.addToLikedSongs(currentSong);
             System.out.println("[Bookmark] Added to " + currentUser.getUsername() + "'s liked songs");
-            // Directly use BookmarkService
-            new BookmarkService().addBookmark(currentUser, currentSong);
+            BookmarkService bookmarkService = (BookmarkService) serviceManager.getServiceByName("BookmarkService");
+            if (bookmarkService != null) {
+                bookmarkService.addBookmark(currentUser, currentSong);
+            }
         }
     }
 
