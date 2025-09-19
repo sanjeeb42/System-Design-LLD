@@ -192,11 +192,11 @@ class GatewayFactory{
     }
 
     public PaymentGateway getGateway(GATEWAYTYPE type){
-        if(type.equals(GATEWAYTYPE.PAYTM)){
+        if(type == GATEWAYTYPE.PAYTM){
             PaymentGateway paymentGateway=new PaytmPaymentGateway();
             return new PaymentGatewayProxy(paymentGateway,5);
         }
-        else if(type.equals(GATEWAYTYPE.RAZORPAY)){
+        else if(type == GATEWAYTYPE.RAZORPAY){
             PaymentGateway paymentGateway=new RazorPayPaymentGateway();
             return new PaymentGatewayProxy(paymentGateway,3);
         }
