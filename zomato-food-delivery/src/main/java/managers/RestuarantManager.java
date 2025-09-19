@@ -9,12 +9,6 @@ import java.util.List;
 public class RestuarantManager {
     private List<Restaurant>restaurants=new ArrayList<>();
 
-    private static RestuarantManager instance=null;
-
-    private RestuarantManager(){}
-
-    public static RestuarantManager getInstance(){
-        if(instance==null){
     private static volatile RestuarantManager instance = null;
 
     private RestuarantManager(){}

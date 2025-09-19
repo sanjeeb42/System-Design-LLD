@@ -6,13 +6,6 @@ import java.util.List;
 public class Restaurant {
     private String name;
     private String location;
-    private int restuarantId;
-    private static int nextRestaurantId = 0;
-    List<MenuItems>menu=new ArrayList<>();
-
-    public Restaurant(String name, String location) {
-        this.name = name;
-        this.location = location;
     private int restaurantId;
     private static int nextRestaurantId = 0;
     List<MenuItems>menu=new ArrayList<>();

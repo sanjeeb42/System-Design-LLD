@@ -7,12 +7,6 @@ import java.util.List;
 
 public class OrderManager {
     private List<Order> orders = new ArrayList<>();
-    private static OrderManager instance = null;
-
-    private OrderManager() {}
-
-    public static OrderManager getInstance() {
-        if (instance == null) {
     private static volatile OrderManager instance = null;
 
     private OrderManager() {}
