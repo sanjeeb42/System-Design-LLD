@@ -36,11 +36,6 @@ class GpayBankingSystem implements BankingSystem {
 };
 
 abstract class PaymentGateway{
-    BankingSystem bankingSystem;
-
-    PaymentGateway(BankingSystem bankingSystem){
-        this.bankingSystem=bankingSystem;
-    }
 
     abstract boolean initiatePayment(PaymentRequest paymentRequest);
     abstract boolean validatePayment(PaymentRequest paymentRequest);
@@ -58,9 +53,9 @@ abstract class PaymentGateway{
 }
 
 class PaytmPaymentGateway extends PaymentGateway {
-
-    PaytmPaymentGateway(BankingSystem bankingSystem) {
-        super(bankingSystem);
+    BankingSystem bankingSystem;
+    PaytmPaymentGateway() {
+        bankingSystem=new PaytmBankingSystem();
     }
 
     @Override
@@ -84,9 +79,9 @@ class PaytmPaymentGateway extends PaymentGateway {
 }
 
 class GpayPaymentGateway extends PaymentGateway{
-
-    GpayPaymentGateway(BankingSystem bankingSystem) {
-        super(bankingSystem);
+    BankingSystem bankingSystem;
+    GpayPaymentGateway() {
+        bankingSystem=new GpayBankingSystem();
     }
 
     @Override
@@ -111,8 +106,8 @@ class GpayPaymentGateway extends PaymentGateway{
 class GatewayFactory{
 
     public static PaymentGateway getInstance(String gateway){
-        if(gateway=="Paytm")return new PaytmPaymentGateway(new PaytmBankingSystem());
-        return new GpayPaymentGateway(new GpayBankingSystem());
+        if(gateway=="Paytm")return new PaytmPaymentGateway();
+        return new GpayPaymentGateway();
     }
 }
 
