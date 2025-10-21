@@ -114,11 +114,18 @@ class GpayPaymentGateway extends PaymentGateway{
     }
 }
 
-class GatewayFactory{
+enum GatewayType{
+    PAYTM,
+    GPAY
+};
 
-    public static PaymentGateway getInstance(String gateway){
-        if(gateway=="Paytm")return new PaytmPaymentGateway();
-        return new GpayPaymentGateway();
+class GatewayFactory{
+    public static PaymentGateway instance=null;
+
+    public static PaymentGateway getInstance(GatewayType gatewayType){
+        if(gatewayType.equals(GatewayType.PAYTM))instance=new PaytmPaymentGateway();
+        else if (gatewayType.equals(GatewayType.GPAY))instance= new GpayPaymentGateway();
+        return instance;
     }
 }
 
@@ -172,7 +179,7 @@ public class PaymentGatewayApplication {
         PaymentRequest paymentRequest=new PaymentRequest("Sanjeeb","Pranav",2000,"USD");
         String payUsing= "Gpay";
 
-        PaymentGateway paymentGateway=GatewayFactory.getInstance(payUsing);
+        PaymentGateway paymentGateway=GatewayFactory.getInstance(GatewayType.GPAY);
         PaymentGatewayProxy paymentGatewaywithRetries=new PaymentGatewayProxy(paymentGateway,3);
         paymentGatewaywithRetries.processPayment(paymentRequest);
     }
