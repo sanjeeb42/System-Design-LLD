@@ -116,7 +116,9 @@ class GpayPaymentGateway extends PaymentGateway{
 
 enum GatewayType{
     PAYTM,
-    GPAY
+    GPAY,
+    PHONEPE,
+    RAZORPAY
 };
 
 class GatewayFactory{
@@ -177,8 +179,6 @@ class PaymentGatewayProxy extends PaymentGateway {
 public class PaymentGatewayApplication {
     public static void main(String[] args) {
         PaymentRequest paymentRequest=new PaymentRequest("Sanjeeb","Pranav",2000,"USD");
-        String payUsing= "Gpay";
-
         PaymentGateway paymentGateway=GatewayFactory.getInstance(GatewayType.GPAY);
         PaymentGatewayProxy paymentGatewaywithRetries=new PaymentGatewayProxy(paymentGateway,3);
         paymentGatewaywithRetries.processPayment(paymentRequest);
