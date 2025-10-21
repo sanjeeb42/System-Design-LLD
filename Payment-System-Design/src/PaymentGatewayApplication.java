@@ -1,3 +1,4 @@
+import java.util.Random;
 
 class PaymentRequest{
     public String sender;
@@ -19,48 +20,53 @@ interface BankingSystem{
 
 class PaytmBankingSystem implements BankingSystem {
 
+    private Random rand=new Random();
     @Override
     public boolean processPayment(double amount) {
         System.out.println("Paying using Paytm");
-        return true;
+        int r=rand.nextInt(100);
+        return r<=90;
     }
 };
 
 class GpayBankingSystem implements BankingSystem {
-
+    private Random rand=new Random();
     @Override
     public boolean processPayment(double amount) {
         System.out.println("Paying using Gpay");
-        return true;
+        int r=rand.nextInt(100);
+        return r<=80;
     }
 };
 
 abstract class PaymentGateway{
-    BankingSystem bankingSystem;
-
-    PaymentGateway(BankingSystem bankingSystem){
-        this.bankingSystem=bankingSystem;
-    }
 
     abstract boolean initiatePayment(PaymentRequest paymentRequest);
     abstract boolean validatePayment(PaymentRequest paymentRequest);
     abstract boolean confirmPayment(PaymentRequest paymentRequest);
 
     public boolean processPayment(PaymentRequest paymentRequest){
-        boolean result=true;
-        if(paymentRequest!=null){
-            result=initiatePayment(paymentRequest);
+
+        if(!initiatePayment(paymentRequest)){
+            System.out.println("Initiation Failed");
+            return false;
         }
-        if(result)result=validatePayment(paymentRequest);
-        if(result)result=confirmPayment(paymentRequest);
-        return result;
+        if(!validatePayment(paymentRequest)){
+            System.out.println("Validation Failed");
+            return false;
+        }
+        if(!confirmPayment(paymentRequest)){
+            System.out.println("Acknowledgement Failed");
+            return false;
+        }
+        return true;
     }
 }
 
 class PaytmPaymentGateway extends PaymentGateway {
-
-    PaytmPaymentGateway(BankingSystem bankingSystem) {
-        super(bankingSystem);
+    BankingSystem bankingSystem;
+    PaytmPaymentGateway() {
+        bankingSystem=new PaytmBankingSystem();
     }
 
     @Override
@@ -73,7 +79,7 @@ class PaytmPaymentGateway extends PaymentGateway {
     @Override
     boolean validatePayment(PaymentRequest paymentRequest) {
         System.out.println(paymentRequest.sender+" attempting to send "+paymentRequest.amount);
-        return true;
+        return bankingSystem.processPayment(paymentRequest.amount);
     }
 
     @Override
@@ -84,9 +90,9 @@ class PaytmPaymentGateway extends PaymentGateway {
 }
 
 class GpayPaymentGateway extends PaymentGateway{
-
-    GpayPaymentGateway(BankingSystem bankingSystem) {
-        super(bankingSystem);
+    BankingSystem bankingSystem;
+    GpayPaymentGateway() {
+        bankingSystem=new GpayBankingSystem();
     }
 
     @Override
@@ -98,7 +104,7 @@ class GpayPaymentGateway extends PaymentGateway{
     @Override
     boolean validatePayment(PaymentRequest paymentRequest) {
         System.out.println(paymentRequest.sender+" attempting to send "+paymentRequest.amount);
-        return true;
+        return bankingSystem.processPayment(paymentRequest.amount);
     }
 
     @Override
@@ -108,12 +114,64 @@ class GpayPaymentGateway extends PaymentGateway{
     }
 }
 
-class GatewayFactory{
+enum GatewayType{
+    PAYTM,
+    GPAY
+};
 
-    public static PaymentGateway getInstance(String gateway){
-        if(gateway=="Paytm")return new PaytmPaymentGateway(new PaytmBankingSystem());
-        return new GpayPaymentGateway(new GpayBankingSystem());
+class GatewayFactory{
+    public static PaymentGateway instance=null;
+
+    public static PaymentGateway getInstance(GatewayType gatewayType){
+        if(gatewayType.equals(GatewayType.PAYTM))instance=new PaytmPaymentGateway();
+        else if (gatewayType.equals(GatewayType.GPAY))instance= new GpayPaymentGateway();
+        return instance;
     }
+}
+
+class PaymentGatewayProxy extends PaymentGateway {
+
+    // Single Responsibility hoga iska - Retry ka sirf
+
+    PaymentGateway realGateway;
+    int retriesCount;
+
+    PaymentGatewayProxy(PaymentGateway paymentGateway,int retriesCount){
+        this.realGateway=paymentGateway;
+        this.retriesCount=retriesCount;
+    }
+
+    @Override
+    boolean initiatePayment(PaymentRequest paymentRequest) {
+        return realGateway.initiatePayment(paymentRequest);
+    }
+
+    @Override
+    boolean validatePayment(PaymentRequest paymentRequest) {
+        return realGateway.validatePayment(paymentRequest);
+    }
+
+    @Override
+    boolean confirmPayment(PaymentRequest paymentRequest) {
+        return realGateway.confirmPayment(paymentRequest);
+    }
+
+
+    public boolean processPayment(PaymentRequest paymentRequest){
+        for(int i=0;i<retriesCount;i++){
+            if(!realGateway.processPayment(paymentRequest)){
+                System.out.println("Retrying Payment Again");
+                continue;
+            }
+            else {
+                System.out.println("Payment Successful and amount credited to "+paymentRequest.receiver);
+                return true;
+            }
+        }
+        System.out.println("Max Retries Exceeded , Payment failed");
+        return false;
+    }
+
 }
 
 public class PaymentGatewayApplication {
@@ -121,7 +179,8 @@ public class PaymentGatewayApplication {
         PaymentRequest paymentRequest=new PaymentRequest("Sanjeeb","Pranav",2000,"USD");
         String payUsing= "Gpay";
 
-        PaymentGateway paymentGateway=GatewayFactory.getInstance(payUsing);
-        paymentGateway.processPayment(paymentRequest);
+        PaymentGateway paymentGateway=GatewayFactory.getInstance(GatewayType.GPAY);
+        PaymentGatewayProxy paymentGatewaywithRetries=new PaymentGatewayProxy(paymentGateway,3);
+        paymentGatewaywithRetries.processPayment(paymentRequest);
     }
 }
